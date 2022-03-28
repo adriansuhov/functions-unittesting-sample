@@ -39,7 +39,8 @@ steps:
   inputs:
     command: 'custom'
     projects: '**/Functions.Tests/*.csproj'
-    arguments: 'test --results-directory $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration)'
+    custom: 'test'
+    arguments: '--results-directory $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration)'
 
 - publish: '$(Build.ArtifactStagingDirectory)\*.trx'
   displayName: 'Publish test results'

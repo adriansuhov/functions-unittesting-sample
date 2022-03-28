@@ -1,15 +1,15 @@
-# .NET Desktop
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
 # Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-pr:
- branches:
-   include:
-   - master
+trigger:
+  branches:
+    include:
+    - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-lastest'
 
 variables:
   solution: '**/*.sln'
@@ -18,18 +18,31 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
+- task: UseDotNet@2
   inputs:
-    restoreSolution: '$(solution)'
+    packageType: 'sdk'
+    version: '2.1.x'
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2
+  displayName: Restore
   inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: restore
+    projects: '**/*.csproj'
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'build' 
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: test
+    projects: '**/*[Tt]ests/*.csproj'
+    arguments: '--results-directory $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration)'
+
+- publish: '$(Build.ArtifactStagingDirectory)\*.trx'
+  displayName: 'Publish test results'
+  artifact: test_result

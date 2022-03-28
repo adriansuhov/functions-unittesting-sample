@@ -37,9 +37,9 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
-    command: test
+    command: 'custom'
     projects: '**/Functions.Tests/*.csproj'
-    arguments: '--results-directory $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration)'
+    arguments: 'test --results-directory $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration)'
 
 - publish: '$(Build.ArtifactStagingDirectory)\*.trx'
   displayName: 'Publish test results'

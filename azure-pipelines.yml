@@ -42,6 +42,6 @@ steps:
     custom: 'test'
     arguments: '--results-directory $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration)'
 
-- publish: '$(Build.ArtifactStagingDirectory)\*.trx'
+- publish: '$(Build.ArtifactStagingDirectory)'
   displayName: 'Publish test results'
   artifact: test_result

@@ -38,7 +38,7 @@ steps:
   displayName: Test
   inputs:
     command: test
-    projects: '**/*[Tt]ests/*.csproj'
+    projects: '**/Functions.Tests/*.csproj'
     arguments: '--results-directory $(Build.ArtifactStagingDirectory) --configuration $(buildConfiguration)'
 
 - publish: '$(Build.ArtifactStagingDirectory)\*.trx'

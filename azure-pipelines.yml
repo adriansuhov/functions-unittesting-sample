@@ -18,18 +18,21 @@ stages:
     jobs:
     - job: master
       pool: 
-        vmImage: 'windows-2019'
+        vmImage: 'ubuntu-latest'
+      condition: and(contains(variables['build.sourceBranch'], 'refs/heads/master'), succeeded())
       steps:
       - task: NuGetToolInstaller@1
 
     - job: develop
       pool: 
-        vmImage: 'windows-2019'
+        vmImage: 'ubuntu-latest'
+      condition: and(contains(variables['build.sourceBranch'], 'refs/heads/develop'), succeeded())
       steps:
       - task: NuGetToolInstaller@1
     
     - job: release
       pool: 
-        vmImage: 'windows-2019'
+        vmImage: 'ubuntu-latest'
+      condition: and(contains(variables['build.sourceBranch'], 'refs/heads/release'), succeeded())
       steps:
       - task: NuGetToolInstaller@1

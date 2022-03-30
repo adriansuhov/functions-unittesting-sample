@@ -5,49 +5,31 @@
 
 trigger:
   - master
-
-pool:
-  vmImage: 'windows-latest'
+  - develop
+  - release/*
 
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '2.1.x'
+stages:
+  - stage: Test
+    jobs:
+    - job: master
+      pool: 
+        vmImage: 'windows-2019'
+      steps:
+      - task: NuGetToolInstaller@1
 
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: '**/*.csproj'
-
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: 'build' 
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: 'custom'
-    projects: '**/Functions.Tests/*.csproj'
-    custom: 'test'
-    arguments: '--results-directory $(Build.SourcesDirectory) --configuration $(buildConfiguration)'
-
-- task: CopyFiles@2
-  inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: '*.trx'
-    targetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- publish: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Publish test results'
-  artifact: test_result
+    - job: develop
+      pool: 
+        vmImage: 'windows-2019'
+      steps:
+      - task: NuGetToolInstaller@1
+    
+    - job: release
+      pool: 
+        vmImage: 'windows-2019'
+      steps:
+      - task: NuGetToolInstaller@1
